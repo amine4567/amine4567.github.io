@@ -1,0 +1,14 @@
+html,
+body {
+    margin: auto;
+    width: 1100px;
+}
+
+#animeList {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.checkbox-block {
+    padding: 2px
+}
