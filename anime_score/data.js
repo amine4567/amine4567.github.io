@@ -365,7 +365,7 @@ const animeData = [
     },
     {
         id: "blackButler",
-        fullName: "blackButler"
+        fullName: "Black Butler"
     },
     {
         id: "monster",

@@ -12,7 +12,6 @@ for (elt of animeData) {
     animeLabel.appendChild(animeLabelText);
 
     const checkboxBlock = document.createElement("div")
-    checkboxBlock.setAttribute("class", "checkbox-block")
     checkboxBlock.appendChild(animeCheckbox)
     checkboxBlock.appendChild(animeLabel)
 

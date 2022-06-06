@@ -6,9 +6,7 @@ body {
 
 #animeList {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-
-.checkbox-block {
-    padding: 2px
+    grid-template-rows: repeat(25, 1fr);
+    gap: 4px;
+    grid-auto-flow: column;
 }
