@@ -1,16 +1,17 @@
 const cellsData = {
     "B1": {
         "notes": `
-            <a href="https://retroachievements.org/achievement/233056">Spooky Month (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233091">Stepping Onto Some New Grounds (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233057">Pico (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233092">Mommy Mearest (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233058">Mommy Must Murder (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233059">Red Snow (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233060">Hating Simulator (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233090">Trick or Treat, Smell My Feet (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233061">Tankman (5)</a> <br/>
-
+            <ul>
+                <li><a href="https://retroachievements.org/achievement/233056">Spooky Month (5)</a></li>
+                <li><a href="https://retroachievements.org/achievement/233091">Stepping Onto Some New Grounds (5)</a></li>
+                <li><a href="https://retroachievements.org/achievement/233057">Pico (5)</a></li>
+                <li><a href="https://retroachievements.org/achievement/233092">Mommy Mearest (5)</a></li>
+                <li><a href="https://retroachievements.org/achievement/233058">Mommy Must Murder (5)</a></li>
+                <li><a href="https://retroachievements.org/achievement/233059">Red Snow (5)</a></li>
+                <li><a href="https://retroachievements.org/achievement/233060">Hating Simulator (5)</a></li>
+                <li><a href="https://retroachievements.org/achievement/233090">Trick or Treat, Smell My Feet (5)</a></li>
+                <li><a href="https://retroachievements.org/achievement/233061">Tankman (5)</a></li>
+            </ul>
             <p>All earned on December 31th, 2022</p>
 
             <a href="https://retroachievements.org/historyexamine.php?d=1672444800&u=amine456">Link to activity history on December 31th, 2022</a>
@@ -44,7 +45,11 @@ const cellsData = {
         "notes": ""
     },
     "D2": {
-        "notes": ""
+        "notes": `
+            <li><a href="https://retroachievements.org/achievement/273141">Muscle! (25)</a>
+            from <a href="https://retroachievements.org/game/21533">~Hack~ Pokemon Regulation Red | Blue [Subset - Solo Challenge] (Game Boy)</a> 
+            Earned on January 1st, 2023</li>
+        `
     },
     "Y2": {
         "notes": `
@@ -70,11 +75,13 @@ const cellsData = {
             <p>All earned from <a href="https://retroachievements.org/game/18282">~Homebrew~ PSXFunkin (PlayStation)</a> on December 31th, 2022</p>
 
             <p>List of achievements:</p>
-            <a href="https://retroachievements.org/achievement/233056">Spooky Month (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233091">Stepping Onto Some New Grounds (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233057">Pico (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233092">Mommy Mearest (5)</a> <br/>
-            <a href="https://retroachievements.org/achievement/233058">Mommy Must Murder (5)</a> <br/> <br/>
+            <li><a href="https://retroachievements.org/achievement/233056">Spooky Month (5)</a></li>
+            <li><a href="https://retroachievements.org/achievement/233091">Stepping Onto Some New Grounds (5)</a></li>
+            <li><a href="https://retroachievements.org/achievement/233057">Pico (5)</a></li>
+            <li><a href="https://retroachievements.org/achievement/233092">Mommy Mearest (5)</a></li>
+            <li><a href="https://retroachievements.org/achievement/233058">Mommy Must Murder (5)</a></li>
+
+            <br/>
 
             <a href="https://retroachievements.org/historyexamine.php?d=1672444800&u=amine456">Link to activity history on December 31th, 2022</a>
         `
