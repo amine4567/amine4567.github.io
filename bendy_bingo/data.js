@@ -26,7 +26,13 @@ const cellsData = {
         "notes": ""
     },
     "Y1": {
-        "notes": ""
+        "notes": `
+            <a href="https://retroachievements.org/achievement/28312">New Ride (3)</a> <br/>
+
+            <p>Earned on December 31th, 2022</p>
+
+            <a href="https://retroachievements.org/historyexamine.php?d=1672444800&u=amine456">Link to activity history on December 31th, 2022</a>
+        `
     },
     "B2": {
         "notes": ""
@@ -41,7 +47,11 @@ const cellsData = {
         "notes": ""
     },
     "Y2": {
-        "notes": ""
+        "notes": `
+            <p>Earned 237 points on December 31th, 2022</p>
+
+            <a href="https://retroachievements.org/historyexamine.php?d=1672444800&u=amine456">Link to activity history on December 31th, 2022</a>
+        `
     },
     "B3": {
         "notes": ""
@@ -50,16 +60,31 @@ const cellsData = {
         "notes": ""
     },
     "N3": {
-        "notes": ""
+        "notes": "FREE POINTS"
     },
     "D3": {
         "notes": ""
     },
     "Y3": {
-        "notes": ""
+        "notes": `
+            <p>All earned from <a href="https://retroachievements.org/game/18282">~Homebrew~ PSXFunkin (PlayStation)</a> on December 31th, 2022</p>
+
+            <p>List of achievements:</p>
+            <a href="https://retroachievements.org/achievement/233056">Spooky Month (5)</a> <br/>
+            <a href="https://retroachievements.org/achievement/233091">Stepping Onto Some New Grounds (5)</a> <br/>
+            <a href="https://retroachievements.org/achievement/233057">Pico (5)</a> <br/>
+            <a href="https://retroachievements.org/achievement/233092">Mommy Mearest (5)</a> <br/>
+            <a href="https://retroachievements.org/achievement/233058">Mommy Must Murder (5)</a> <br/> <br/>
+
+            <a href="https://retroachievements.org/historyexamine.php?d=1672444800&u=amine456">Link to activity history on December 31th, 2022</a>
+        `
     },
     "B4": {
-        "notes": ""
+        "notes": `
+            <p>Earned <a href="https://retroachievements.org/achievement/260354">@EldridgeCrimson, Moyai lol (50)</a> on December 31th, 2022</p>
+
+            <a href="https://retroachievements.org/historyexamine.php?d=1672444800&u=amine456">Link to activity history on December 31th, 2022</a>
+        `
     },
     "E4": {
         "notes": ""
