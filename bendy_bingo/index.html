@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Bendy Bingo</title>
+    <script type="text/javascript" src="data.js"></script>
+</head>
+
+<body>
+    <table class="bingo-table">
+        <tr>
+            <th>B</th>
+            <th>E</th>
+            <th>N</th>
+            <th>D</th>
+            <th>Y</th>
+        </tr>
+        <tr>
+            <td class="B1" onclick="showNotes('B1')">Earn 9 achievements worth at least 5 points each</td>
+            <td class="E1" onclick="showNotes('E1')">Earn achievements worth 1, 2 and 3 points in order</td>
+            <td class="N1" onclick="showNotes('N1')">Earn an achievement whose icon prominently features green</td>
+            <td class="D1" onclick="showNotes('D1')">Write a "Play This Set" for RANews</td>
+            <td class="Y1" onclick="showNotes('Y1')">Earn the current AotW</td>
+        </tr>
+        <tr>
+            <td class="B2" onclick="showNotes('B2')">Earn 36 points from the latest HotCheevs Monthly</td>
+            <td class="E2" onclick="showNotes('E2')">Earn 89 points from Nintendo DS</td>
+            <td class="N2" onclick="showNotes('N2')">Master Mona and the Witch's Hat</td>
+            <td class="D2" onclick="showNotes('D2')">Earn 100 points from hacks</td>
+            <td class="Y2" onclick="showNotes('Y2')">Earn 186 points in one day</td>
+        </tr>
+        <tr>
+            <td class="B3" onclick="showNotes('B3')">Earn an achievement whose ID is divisible by 71</td>
+            <td class="E3" onclick="showNotes('E3')">Earn an achievement with a word that rhymes with "bay"</td>
+            <td class="N3" onclick="showNotes('N3')">FREE POINTS</td>
+            <td class="D3" onclick="showNotes('D3')">Earn any achievement from zxmega</td>
+            <td class="Y3" onclick="showNotes('Y3')">Earn 25 points from homebrew</td>
+        </tr>
+        <tr>
+            <td class="B4" onclick="showNotes('B4')">Earn any achievement worth at least 25 points</td>
+            <td class="E4" onclick="showNotes('E4')">Submit any time/score to the current Leaderboard of the Month</td>
+            <td class="N4" onclick="showNotes('N4')">Share a short video that made you smile</td>
+            <td class="D4" onclick="showNotes('D4')">Earn any speedrun achievement</td>
+            <td class="Y4" onclick="showNotes('Y4')">Place in the top 50% of any leaderboard for any game starting with
+                E</td>
+        </tr>
+        <tr>
+            <td class="B5" onclick="showNotes('B5')">Earn "Ice Skates Against Tree" in Kirby 64</td>
+            <td class="E5" onclick="showNotes('E5')">Write about a song you enjoy from the Third Console Generation</td>
+            <td class="N5" onclick="showNotes('N5')">Draw the avatar of a fellow participant</td>
+            <td class="D5" onclick="showNotes('D5')">Earn an achievement containing "just" in its title/description</td>
+            <td class="Y5" onclick="showNotes('Y5')">Draw Wario and Waluigi as Spy vs. Spy</td>
+        </tr>
+    </table>
+
+    <div id="notes">
+
+    </div>
+
+    <script type="text/javascript" src="script.js"></script>
+</body>
+
+</html>

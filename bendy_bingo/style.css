@@ -1,0 +1,33 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.bingo-table {
+    text-align: center;
+    width: 600px;
+}
+
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    cursor: pointer;
+}
+
+.B1,
+.Y1,
+.Y2,
+.N3,
+.Y3,
+.B4 {
+    background-color: #3dc45c;
+}
+
+#notes {
+    margin-top: 24px;
+    margin-left: 10px;
+    width: 300px;
+    border: 1px solid;
+    padding-left: 10px;
+    padding-top: 0;
+}
