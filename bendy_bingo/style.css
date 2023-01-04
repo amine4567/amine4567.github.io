@@ -19,8 +19,14 @@ td {
 .Y2,
 .N3,
 .Y3,
-.B4 {
+.B4,
+.N1,
+.D2 {
     background-color: #3dc45c;
+}
+
+.E2 {
+    background-color: yellow;
 }
 
 #notes {
