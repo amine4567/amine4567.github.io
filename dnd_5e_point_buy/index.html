@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D&D 5e Point Buy System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 50%;
+      margin: auto;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      text-align: center;
+      padding: 8px;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .center {
+      text-align: center;
+    }
+    button {
+      margin: 10px;
+    }
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="center">D&D 5e Point Buy System</h1>
+  <p class="center">You have 27 points to spend. Abilities start at 8. Adjust values below and assign racial bonuses:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Ability</th>
+        <th>Score</th>
+        <th>+2 Bonus</th>
+        <th>+1 Bonus</th>
+        <th>Final Score</th>
+        <th>Cost</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="abilities">
+      <!-- Abilities will be dynamically added here -->
+    </tbody>
+  </table>
+
+  <p class="center">
+    Remaining Points: <span id="remaining-points">27</span>
+  </p>
+
+  <div class="center">
+    <button id="export-button" class="disabled" onclick="exportToHTML()">Export to Frozen HTML</button>
+  </div>
+
+  <script>
+    const abilities = [
+      { name: 'Strength', score: 8, bonus: 0 },
+      { name: 'Dexterity', score: 8, bonus: 0 },
+      { name: 'Constitution', score: 8, bonus: 0 },
+      { name: 'Intelligence', score: 8, bonus: 0 },
+      { name: 'Wisdom', score: 8, bonus: 0 },
+      { name: 'Charisma', score: 8, bonus: 0 }
+    ];
+    const pointCosts = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 };
+    const maxPoints = 27;
+    const minScore = 8;
+    const maxScore = 15;
+
+    let remainingPoints = maxPoints;
+    let bonusAssignments = { "+2": null, "+1": null };
+
+    const updateTable = () => {
+      const tbody = document.getElementById('abilities');
+      tbody.innerHTML = '';
+      abilities.forEach((ability, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${ability.name}</td>
+          <td>${ability.score}</td>
+          <td>
+            <input type="radio" name="bonus-2" ${bonusAssignments["+2"] === index ? "checked" : ""} onchange="assignBonus('+2', ${index})" ${bonusAssignments["+1"] === index ? "disabled" : ""}>
+          </td>
+          <td>
+            <input type="radio" name="bonus-1" ${bonusAssignments["+1"] === index ? "checked" : ""} onchange="assignBonus('+1', ${index})" ${bonusAssignments["+2"] === index ? "disabled" : ""}>
+          </td>
+          <td>${ability.score + ability.bonus}</td>
+          <td>${pointCosts[ability.score]}</td>
+          <td>
+            <button onclick="adjustScore(${index}, 1)" ${ability.score >= maxScore ? 'disabled' : ''}>+</button>
+            <button onclick="adjustScore(${index}, -1)" ${ability.score <= minScore ? 'disabled' : ''}>-</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      document.getElementById('remaining-points').innerText = remainingPoints;
+      validateExport();
+    };
+
+    const adjustScore = (index, change) => {
+      const ability = abilities[index];
+      const newScore = ability.score + change;
+      if (newScore < minScore || newScore > maxScore) return;
+
+      const costChange = pointCosts[newScore] - pointCosts[ability.score];
+      if (remainingPoints - costChange < 0) return;
+
+      ability.score = newScore;
+      remainingPoints -= costChange;
+      updateTable();
+    };
+
+    const assignBonus = (bonusType, index) => {
+      if (bonusType === "+2" && bonusAssignments["+1"] === index) return;
+      if (bonusType === "+1" && bonusAssignments["+2"] === index) return;
+
+      bonusAssignments[bonusType] = index;
+      abilities.forEach((ability, idx) => {
+        ability.bonus = (idx === bonusAssignments["+2"] ? 2 : (idx === bonusAssignments["+1"] ? 1 : 0));
+      });
+      updateTable();
+    };
+
+    const validateExport = () => {
+      const exportButton = document.getElementById('export-button');
+      const allPointsSpent = remainingPoints === 0;
+      const bonusesAssigned = bonusAssignments["+2"] !== null && bonusAssignments["+1"] !== null;
+      if (allPointsSpent && bonusesAssigned) {
+        exportButton.classList.remove('disabled');
+      } else {
+        exportButton.classList.add('disabled');
+      }
+    };
+
+    const exportToHTML = () => {
+      const frozenPage = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Exported D&D 5e Character</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 20px;
+            }
+            table {
+              border-collapse: collapse;
+              width: 50%;
+              margin: auto;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              text-align: center;
+              padding: 8px;
+            }
+            th {
+              background-color: #f4f4f4;
+            }
+            .center {
+              text-align: center;
+            }
+          </style>
+        </head>
+        <body>
+          <h1 class="center">D&D 5e Point Buy System</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Ability</th>
+                <th>Score</th>
+                <th>+2 Bonus</th>
+                <th>+1 Bonus</th>
+                <th>Final Score</th>
+                <th>Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${abilities.map(ability => `
+                <tr>
+                  <td>${ability.name}</td>
+                  <td>${ability.score}</td>
+                  <td>${bonusAssignments["+2"] === abilities.indexOf(ability) ? "✓" : ""}</td>
+                  <td>${bonusAssignments["+1"] === abilities.indexOf(ability) ? "✓" : ""}</td>
+                  <td>${ability.score + ability.bonus}</td>
+                  <td>${pointCosts[ability.score]}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+      const blob = new Blob([frozenPage], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'character.html';
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    updateTable();
+  </script>
+</body>
+</html>
