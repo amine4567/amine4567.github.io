@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minimalist Groceries</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom smooth transition for tab switching and item movement */
+        .item-transition {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-full flex flex-col items-center justify-start overflow-hidden">
+
+    <!-- Mobile Wrapper Container -->
+    <div class="w-full max-w-md h-full bg-white shadow-xl flex flex-col relative overflow-hidden">
+        
+        <!-- App Header -->
+        <header class="px-6 py-4 bg-white border-b border-slate-100 flex items-center justify-between z-10 shrink-0">
+            <div class="flex items-center space-x-2">
+                <div class="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-900 tracking-tight">Groceries</h1>
+                    <p class="text-xs text-slate-400">No login required • Offline ready</p>
+                </div>
+            </div>
+            <button onclick="clearAllItems()" class="text-xs text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-lg hover:bg-slate-50" title="Reset all items">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-slate-100 bg-slate-50/50 shrink-0 p-1.5 mx-4 mt-3 rounded-xl">
+            <button onclick="switchTab('groceries')" id="tab-btn-groceries" class="flex-1 py-2 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-all bg-white text-emerald-600 shadow-sm">
+                <i data-lucide="list" class="w-4 h-4"></i>
+                <span>To Buy</span>
+                <span id="badge-groceries" class="ml-1.5 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs rounded-full font-semibold">0</span>
+            </button>
+            <button onclick="switchTab('done')" id="tab-btn-done" class="flex-1 py-2 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-all text-slate-500 hover:text-slate-700">
+                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                <span>Done</span>
+                <span id="badge-done" class="ml-1.5 px-2 py-0.5 bg-slate-200 text-slate-600 text-xs rounded-full font-semibold">0</span>
+            </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto px-4 py-4 relative">
+            
+            <!-- Groceries Tab Content -->
+            <div id="tab-groceries" class="space-y-3 pb-20">
+                <!-- Empty State -->
+                <div id="empty-groceries" class="hidden flex flex-col items-center justify-center h-64 text-center px-4">
+                    <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-3">
+                        <i data-lucide="basket" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-700">Your list is empty</h3>
+                    <p class="text-sm text-slate-400 mt-1 max-w-xs">Add items below using the text box to start building your grocery list.</p>
+                </div>
+                <!-- Items Grid/List -->
+                <div id="list-groceries" class="grid grid-cols-2 gap-3">
+                    <!-- Dynamic Items Injected Here -->
+                </div>
+            </div>
+
+            <!-- Done Tab Content -->
+            <div id="tab-done" class="space-y-3 pb-20 hidden">
+                <!-- Empty State -->
+                <div id="empty-done" class="hidden flex flex-col items-center justify-center h-64 text-center px-4">
+                    <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-3">
+                        <i data-lucide="check-check" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-700">Nothing finished yet</h3>
+                    <p class="text-sm text-slate-400 mt-1 max-w-xs">Items you check off will appear here and auto-delete after 2 hours.</p>
+                </div>
+                <!-- Items List -->
+                <div id="list-done" class="space-y-2">
+                    <!-- Dynamic Items Injected Here -->
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Bottom Input Bar (Only visible or prominent on Groceries tab, or always available) -->
+        <div id="bottom-input-bar" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 p-4 z-20 shadow-lg">
+            <form id="add-form" onsubmit="handleAddItem(event)" class="flex items-center space-x-2">
+                <div class="relative flex-1">
+                    <input 
+                        type="text" 
+                        id="item-input" 
+                        placeholder="Add grocery item (e.g., Milk, Apples)..." 
+                        autocomplete="off"
+                        class="w-full pl-4 pr-10 py-3 bg-slate-100/80 border border-transparent rounded-2xl text-sm focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all text-slate-800 placeholder-slate-400"
+                    >
+                    <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                <button 
+                    type="submit" 
+                    class="bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-medium px-5 py-3 rounded-2xl text-sm shadow-md shadow-emerald-500/25 transition-all flex items-center justify-center shrink-0">
+                    Add
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white px-4 py-2.5 rounded-full text-xs font-medium shadow-xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center space-x-2">
+        <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-message">Notification message</span>
+    </div>
+
+    <!-- App Logic -->
+    <script>
+        // State management
+        let state = {
+            activeTab: 'groceries',
+            items: JSON.parse(localStorage.getItem('minimal_grocery_items')) || [
+                { id: '1', text: 'Milk 🥛', status: 'groceries', timestamp: Date.now() },
+                { id: '2', text: 'Avocados 🥑', status: 'groceries', timestamp: Date.now() },
+                { id: '3', text: 'Sourdough Bread 🍞', status: 'groceries', timestamp: Date.now() },
+                { id: '4', text: 'Coffee Beans ☕', status: 'groceries', timestamp: Date.now() }
+            ]
+        };
+
+        const EXPIRATION_TIME_MS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('minimal_grocery_items', JSON.stringify(state.items));
+            render();
+        }
+
+        // Switch active tab
+        function switchTab(tabName) {
+            state.activeTab = tabName;
+            
+            const btnGroceries = document.getElementById('tab-btn-groceries');
+            const btnDone = document.getElementById('tab-btn-done');
+            const tabGroceries = document.getElementById('tab-groceries');
+            const tabDone = document.getElementById('tab-done');
+            const bottomBar = document.getElementById('bottom-input-bar');
+
+            if (tabName === 'groceries') {
+                btnGroceries.className = "flex-1 py-2 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-all bg-white text-emerald-600 shadow-sm";
+                btnDone.className = "flex-1 py-2 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-all text-slate-500 hover:text-slate-700";
+                tabGroceries.classList.remove('hidden');
+                tabDone.classList.add('hidden');
+                bottomBar.style.display = 'block';
+            } else {
+                btnDone.className = "flex-1 py-2 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-all bg-white text-emerald-600 shadow-sm";
+                btnGroceries.className = "flex-1 py-2 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-all text-slate-500 hover:text-slate-700";
+                tabDone.classList.remove('hidden');
+                tabGroceries.classList.add('hidden');
+                // Keep bottom bar available or hide it on done tab? Let's keep it visible so users can add quickly if needed, or hide for clean look. Let's keep it visible.
+            }
+            render();
+        }
+
+        // Add new item
+        function handleAddItem(e) {
+            e.preventDefault();
+            const input = document.getElementById('item-input');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            const newItem = {
+                id: '_' + Math.random().toString(36).substr(2, 9),
+                text: text,
+                status: 'groceries',
+                timestamp: Date.now()
+            };
+
+            state.items.unshift(newItem);
+            input.value = '';
+            saveState();
+            showToast('Added "' + text + '"');
+            
+            // If user added while on done tab, switch back to groceries to see it
+            if (state.activeTab === 'done') {
+                switchTab('groceries');
+            }
+        }
+
+        // Toggle item status between groceries and done
+        function toggleItemStatus(id) {
+            const item = state.items.find(i => i.id === id);
+            if (!item) return;
+
+            if (item.status === 'groceries') {
+                item.status = 'done';
+                item.timestamp = Date.now(); // Reset expiration timer upon completion
+                showToast('Moved to Done');
+            } else {
+                item.status = 'groceries';
+                item.timestamp = Date.now();
+                showToast('Moved back to To Buy');
+            }
+            saveState();
+        }
+
+        // Delete single item
+        function deleteItem(event, id) {
+            event.stopPropagation();
+            state.items = state.items.filter(i => i.id !== id);
+            saveState();
+            showToast('Item deleted');
+        }
+
+        // Clear all items option
+        function clearAllItems() {
+            if (confirm('Clear all items from your list?')) {
+                state.items = [];
+                saveState();
+                showToast('List cleared');
+            }
+        }
+
+        // Check and prune expired items (> 2 hours old in done tab)
+        function checkExpirations() {
+            const now = Date.now();
+            let changed = false;
+            
+            state.items = state.items.filter(item => {
+                if (item.status === 'done') {
+                    const age = now - item.timestamp;
+                    if (age >= EXPIRATION_TIME_MS) {
+                        changed = true;
+                        return false; // Remove expired item
+                    }
+                }
+                return true;
+            });
+
+            if (changed) {
+                saveState();
+            }
+        }
+
+        // Format time remaining for done items
+        function getRemainingTime(timestamp) {
+            const now = Date.now();
+            const elapsed = now - timestamp;
+            const remaining = EXPIRATION_TIME_MS - elapsed;
+
+            if (remaining <= 0) return 'Expiring...';
+
+            const totalMinutes = Math.floor(remaining / (1000 * 60));
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+
+            if (hours > 0) {
+                return `Deletes in ${hours}h ${minutes}m`;
+            } else {
+                return `Deletes in ${minutes}m`;
+            }
+        }
+
+        // Show custom toast notification instead of alert()
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2000);
+        }
+
+        // Render UI
+        function render() {
+            // Filter lists
+            const groceriesItems = state.items.filter(i => i.status === 'groceries');
+            const doneItems = state.items.filter(i => i.status === 'done');
+
+            // Update badges
+            document.getElementById('badge-groceries').textContent = groceriesItems.length;
+            document.getElementById('badge-done').textContent = doneItems.length;
+
+            // Render Groceries Tab
+            const listGroceriesContainer = document.getElementById('list-groceries');
+            const emptyGroceries = document.getElementById('empty-groceries');
+            
+            if (groceriesItems.length === 0) {
+                emptyGroceries.classList.remove('hidden');
+                listGroceriesContainer.innerHTML = '';
+            } else {
+                emptyGroceries.classList.add('hidden');
+                listGroceriesContainer.innerHTML = groceriesItems.map(item => `
+                    <div onclick="toggleItemStatus('${item.id}')" 
+                         class="item-transition bg-white border border-slate-200/80 hover:border-emerald-300 hover:shadow-md p-4 rounded-2xl cursor-pointer flex flex-col justify-between h-28 relative group active:scale-[0.98]">
+                        <div class="flex items-start justify-between w-full">
+                            <span class="w-6 h-6 rounded-full border-2 border-slate-300 group-hover:border-emerald-500 flex items-center justify-center transition-colors">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-white opacity-0 group-hover:opacity-100"></i>
+                            </span>
+                            <button onclick="deleteItem(event, '${item.id}')" class="text-slate-300 hover:text-rose-500 p-1 rounded-lg transition-colors">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="font-medium text-slate-800 text-sm leading-snug line-clamp-2 pr-2">
+                            ${escapeHtml(item.text)}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Render Done Tab
+            const listDoneContainer = document.getElementById('list-done');
+            const emptyDone = document.getElementById('empty-done');
+
+            if (doneItems.length === 0) {
+                emptyDone.classList.remove('hidden');
+                listDoneContainer.innerHTML = '';
+            } else {
+                emptyDone.classList.add('hidden');
+                listDoneContainer.innerHTML = doneItems.map(item => `
+                    <div onclick="toggleItemStatus('${item.id}')" 
+                         class="item-transition bg-slate-50/80 border border-slate-200/60 hover:bg-white hover:border-slate-300 p-3.5 rounded-2xl cursor-pointer flex items-center justify-between group active:scale-[0.99]">
+                        <div class="flex items-center space-x-3 overflow-hidden">
+                            <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm shadow-emerald-500/20">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                            </span>
+                            <div class="truncate">
+                                <p class="font-medium text-slate-500 line-through text-sm truncate">${escapeHtml(item.text)}</p>
+                                <p class="text-[11px] text-amber-600 font-medium flex items-center space-x-1 mt-0.5">
+                                    <i data-lucide="clock" class="w-3 h-3"></i>
+                                    <span>${getRemainingTime(item.timestamp)}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <button onclick="deleteItem(event, '${item.id}')" class="text-slate-300 hover:text-rose-500 p-1.5 rounded-lg transition-colors shrink-0">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Re-initialize Lucide icons for newly rendered elements
+            lucide.createIcons();
+        }
+
+        // Helper to prevent XSS injection in item text
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Initialize App
+        window.onload = function() {
+            render();
+            // Check expirations every 10 seconds
+            setInterval(() => {
+                checkExpirations();
+                render(); // Re-render to update countdown text timers
+            }, 10000);
+        };
+    </script>
+</body>
+</html>
