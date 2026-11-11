@@ -27,19 +27,36 @@
     <div class="w-full max-w-md h-full bg-white shadow-xl flex flex-col relative overflow-hidden">
         
         <!-- App Header -->
-        <header class="px-6 py-4 bg-white border-b border-slate-100 flex items-center justify-between z-10 shrink-0">
-            <div class="flex items-center space-x-2">
-                <div class="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
-                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <header class="px-6 py-4 bg-white border-b border-slate-100 flex flex-col space-y-3 z-10 shrink-0">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg text-slate-900 tracking-tight">Groceries</h1>
+                        <p class="text-xs text-slate-400">No login required • Offline ready</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="font-bold text-lg text-slate-900 tracking-tight">Groceries</h1>
-                    <p class="text-xs text-slate-400">No login required • Offline ready</p>
-                </div>
+                <button onclick="clearAllItems()" class="text-xs text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-lg hover:bg-slate-50" title="Reset all items">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
             </div>
-            <button onclick="clearAllItems()" class="text-xs text-slate-400 hover:text-rose-500 transition-colors p-2 rounded-lg hover:bg-slate-50" title="Reset all items">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
+
+            <!-- Search Input Bar -->
+            <div class="relative w-full">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Search items..." 
+                    oninput="handleSearch(this.value)"
+                    class="w-full pl-9 pr-8 py-2 bg-slate-100/80 border border-transparent rounded-xl text-xs focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all text-slate-800 placeholder-slate-400"
+                >
+                <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-full">
+                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
         </header>
 
         <!-- Navigation Tabs -->
@@ -66,8 +83,8 @@
                     <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-3">
                         <i data-lucide="basket" class="w-8 h-8"></i>
                     </div>
-                    <h3 class="font-semibold text-slate-700">Your list is empty</h3>
-                    <p class="text-sm text-slate-400 mt-1 max-w-xs">Add items below using the text box to start building your grocery list.</p>
+                    <h3 id="empty-groceries-title" class="font-semibold text-slate-700">Your list is empty</h3>
+                    <p id="empty-groceries-desc" class="text-sm text-slate-400 mt-1 max-w-xs">Add items below using the text box to start building your grocery list.</p>
                 </div>
                 <!-- Items Grid/List -->
                 <div id="list-groceries" class="grid grid-cols-2 gap-3">
@@ -82,8 +99,8 @@
                     <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-3">
                         <i data-lucide="check-check" class="w-8 h-8"></i>
                     </div>
-                    <h3 class="font-semibold text-slate-700">Nothing finished yet</h3>
-                    <p class="text-sm text-slate-400 mt-1 max-w-xs">Items you check off will appear here and auto-delete after 2 hours.</p>
+                    <h3 id="empty-done-title" class="font-semibold text-slate-700">Nothing finished yet</h3>
+                    <p id="empty-done-desc" class="text-sm text-slate-400 mt-1 max-w-xs">Items you check off will appear here and auto-delete after 2 hours.</p>
                 </div>
                 <!-- Items List -->
                 <div id="list-done" class="space-y-2">
@@ -93,7 +110,7 @@
 
         </main>
 
-        <!-- Bottom Input Bar (Only visible or prominent on Groceries tab, or always available) -->
+        <!-- Bottom Input Bar -->
         <div id="bottom-input-bar" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 p-4 z-20 shadow-lg">
             <form id="add-form" onsubmit="handleAddItem(event)" class="flex items-center space-x-2">
                 <div class="relative flex-1">
@@ -129,6 +146,7 @@
         // State management
         let state = {
             activeTab: 'groceries',
+            searchQuery: '',
             items: JSON.parse(localStorage.getItem('minimal_grocery_items')) || [
                 { id: '1', text: 'Milk 🥛', status: 'groceries', timestamp: Date.now() },
                 { id: '2', text: 'Avocados 🥑', status: 'groceries', timestamp: Date.now() },
@@ -143,6 +161,25 @@
         function saveState() {
             localStorage.setItem('minimal_grocery_items', JSON.stringify(state.items));
             render();
+        }
+
+        // Handle Live Search Input
+        function handleSearch(query) {
+            state.searchQuery = query.toLowerCase().trim();
+            const clearBtn = document.getElementById('clear-search-btn');
+            if (query.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+            render();
+        }
+
+        // Clear Search Query
+        function clearSearch() {
+            const searchInput = document.getElementById('search-input');
+            searchInput.value = '';
+            handleSearch('');
         }
 
         // Switch active tab
@@ -166,7 +203,6 @@
                 btnGroceries.className = "flex-1 py-2 px-4 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 transition-all text-slate-500 hover:text-slate-700";
                 tabDone.classList.remove('hidden');
                 tabGroceries.classList.add('hidden');
-                // Keep bottom bar available or hide it on done tab? Let's keep it visible so users can add quickly if needed, or hide for clean look. Let's keep it visible.
             }
             render();
         }
@@ -271,7 +307,7 @@
             }
         }
 
-        // Show custom toast notification instead of alert()
+        // Show custom toast notification
         let toastTimeout;
         function showToast(message) {
             const toast = document.getElementById('toast');
@@ -289,13 +325,17 @@
 
         // Render UI
         function render() {
-            // Filter lists
-            const groceriesItems = state.items.filter(i => i.status === 'groceries');
-            const doneItems = state.items.filter(i => i.status === 'done');
+            // Base items by status
+            const allGroceries = state.items.filter(i => i.status === 'groceries');
+            const allDone = state.items.filter(i => i.status === 'done');
 
-            // Update badges
-            document.getElementById('badge-groceries').textContent = groceriesItems.length;
-            document.getElementById('badge-done').textContent = doneItems.length;
+            // Filtered items based on search query
+            const groceriesItems = allGroceries.filter(i => i.text.toLowerCase().includes(state.searchQuery));
+            const doneItems = allDone.filter(i => i.text.toLowerCase().includes(state.searchQuery));
+
+            // Update badges to display total count
+            document.getElementById('badge-groceries').textContent = allGroceries.length;
+            document.getElementById('badge-done').textContent = allDone.length;
 
             // Render Groceries Tab
             const listGroceriesContainer = document.getElementById('list-groceries');
@@ -304,6 +344,13 @@
             if (groceriesItems.length === 0) {
                 emptyGroceries.classList.remove('hidden');
                 listGroceriesContainer.innerHTML = '';
+                if (state.searchQuery) {
+                    document.getElementById('empty-groceries-title').textContent = 'No matching items';
+                    document.getElementById('empty-groceries-desc').textContent = `No items found matching "${state.searchQuery}".`;
+                } else {
+                    document.getElementById('empty-groceries-title').textContent = 'Your list is empty';
+                    document.getElementById('empty-groceries-desc').textContent = 'Add items below using the text box to start building your grocery list.';
+                }
             } else {
                 emptyGroceries.classList.add('hidden');
                 listGroceriesContainer.innerHTML = groceriesItems.map(item => `
@@ -331,6 +378,13 @@
             if (doneItems.length === 0) {
                 emptyDone.classList.remove('hidden');
                 listDoneContainer.innerHTML = '';
+                if (state.searchQuery) {
+                    document.getElementById('empty-done-title').textContent = 'No matching items';
+                    document.getElementById('empty-done-desc').textContent = `No completed items found matching "${state.searchQuery}".`;
+                } else {
+                    document.getElementById('empty-done-title').textContent = 'Nothing finished yet';
+                    document.getElementById('empty-done-desc').textContent = 'Items you check off will appear here and auto-delete after 2 hours.';
+                }
             } else {
                 emptyDone.classList.add('hidden');
                 listDoneContainer.innerHTML = doneItems.map(item => `
